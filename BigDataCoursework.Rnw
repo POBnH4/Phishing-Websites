@@ -1,0 +1,245 @@
+\documentclass{article}
+\usepackage{breakurl}
+\usepackage{graphicx, verbatim}
+\usepackage{amsmath}
+\usepackage{amscd}
+\usepackage{lipsum}
+\usepackage{enumitem}
+\usepackage{todonotes}
+\usepackage[tableposition=top]{caption}
+\usepackage{ifthen}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{inconsolata}
+\usepackage{url}
+\setlength{\textwidth}{6.5in} 
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in} 
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+\setlength{\parindent}{0cm}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks   = true, %Colours links instead of ugly boxes
+  urlcolor     = blue, %Colour for external hyperlinks
+  linkcolor    = blue, %Colour of internal links
+  citecolor   = red %Colour of citations
+}
+\begin{document}
+\title{CM3111 Big Data Coursework}
+\author{Petar Bonchev}
+\maketitle
+\section{Data Exploration}
+\begin{itemize}
+\newline 1.1. Data choice
+\newline 
+
+\item 
+\newline  The dataset I decided to use is Phishing websites provided by UCI machine learning repositoryhttps://archive.ics.uci.edu/ml/datasets/Phishing+Websites}.
+\newline 
+\item 
+\newline  I chose this data set because of its practical potential to predict dangerouse websites for the user and also because the size of the dataset is more appropriate for the current coursework and of manageable size. In addition, hacking/ethical hacking have always been an interesting subject for me.
+
+\newline 
+\newline 1.2. Problem statement and Data Exploration
+\newline 
+\item
+\newline In this dataset are presented one of the most famous and widely used features that have proved to be sound and effective in predicting phishing websites.  Each attribute corresponds to a particular technique that was used to determine whether the tested website falls into one of the three website caterogies - legimate, suspicious and phishing.
+\newline 
+
+\item 
+\newline In this coursework the aim is to build a predictive model so it can predict which websites are phishing websites and contain malware harmful to the user.
+
+\item
+\newline As we can see below the names of the features(columns), each column stands for a different way a website can be detected whether it contains some kind of malware. Although, this data set contains data for 31 distinctive malware detecting methods, there is no agreement in literature on the definitive features that characterize phishing websites and it is difficult to shape a dataset that covers all possible features. In addition, in this data set some new features have been proposed, new rules have been experimentally assigned to some well-known features and some other features have been updated.
+\newline
+
+\end{itemize}
+\newline
+\newline
+\newline
+\newline
+\newline
+<<warning=FALSE, message=FALSE>>=
+options(scipen = 999) # disable scientific notation -numbers
+cwFile <- read.csv('C:\\Users\\Peter Boncheff\\Desktop\\Courseworks\\Big Data\\phishing.csv')
+# Read and save dataset
+df <- cwFile # use an alternative data frame
+cat("This phishing Websites database has", nrow(df), "rows and", ncol(df), "columns")
+names(df) # illustrating all names of columns
+@
+\begin{itemize}
+\item 
+\newline The data set is filled with integers all of which are either 1,0 or -1. These integers represent whether the method that was used to predict which websites are malicious(phishing). Therefore,
+1 stands for legitimate website, 0 stands for suspicious website and -1 stands for phishing website.
+\end{itemize}
+
+<<warning=FALSE, message=FALSE>>=
+str(df) # Quick description of the dataset;
+@
+
+As we can see the distribution from the bar plot about 30 percent of the tested websites that have sub domains(see column -1) contain harmful malware, slighty more than 30 percent (see column 0) are suspicious and could harm the user and just over 40 percent are legitemate(see column 1). In addition, all numbers are integers, none are factors. 
+\newline
+\newline An example is given below of how the different techniques work to determine whether a website is phishing or legitemate. Since the data set consists of 31 attributes I thought it will be redundant if I explain how every single one works.
+\newline 
+\newline
+Attribute - having\_IP\_Address
+\newline
+
+If an IP address is used as an alternative of the domain name in the URL, such as url{  http://125.98.3.123/fake.html}, users can be sure that someone is trying to steal their personal information. Sometimes, the IP address is even transformed into hexadecimal code as shown in the following link url{ http://0x58.0xCC.0xCA.0x62/2/paypal.ca/index.html}.
+\newline
+Rule: If The Domain Part has an IP Address - Phishing, Otherwise - Legitimate
+\newline
+
+<<warning=FALSE, message=FALSE>>=
+
+par(mar=c(7.1, 7.1, 7.1, 2.1),mgp=c(3, 2, 0),las=0) #sets graphic grid to 2 by 2 with margin spacing
+labelFreqs <- table(df$having_Sub_Domain) # frequency of Result
+barplot(labelFreqs,col = grey.colors(3), # Shows the frequency of having sub domain; 
+        main="Websites that have sub domain")
+#An example of results using a technique that checks whether the websites have sub domain
+@
+\newline
+\newline
+\newline
+\newline
+\newline 1.3. Pre-processing
+<<>>=
+ colSums(is.na(df)) # check for missing values 
+@
+\begin{itemize}
+\item
+\newline From the output above we can conclude that there are no missing values in the dataset. Therefore, techniques to predict the missing values are not required
+\item
+\newline Standarise or normalise 
+\newline
+
+<<warning=FALSE, message=FALSE>>=
+#standardize and normalise
+dat <- data.frame(x = rnorm(10, 30, .2), y = runif(10, 3, 5))
+scaled.dat <- scale(dat)
+
+# check that we get mean of 0 and sd of 1
+colMeans(scaled.dat)  # a version of apply(scaled.dat, 2, mean)
+apply(scaled.dat, 2, sd)
+@
+
+\newline From the results above we can conclude that the mean is 1 and so is the standard deviation, thus the data values are equal or really close to the mean which is easily observable since the data
+only consists of -1,0, and 1.
+\newline
+\newline
+\newline
+\newline
+\newline Generate or drop features
+\newline
+\newline Since the data is really well structured with no redundancy, there is no need to generate new features or to drop any of the current ones.
+
+\end{itemize}
+
+\section{Modelling/Classification}
+\begin{itemize}
+\item Vital part of modelling is to separate the given dataset into for example, one training and one testing subset. In this section, I divide the data into a training and a testing subsets, build a model with the training set and finally test,evaluate and discuss the results.
+\end{itemize} 
+
+\newline 2.1. Divide data
+<<warning=FALSE, message=FALSE>>=
+
+library(dplyr)
+library(caret)
+library(ISLR)
+
+idTrain <- createDataPartition(df$Result, p=0.7,list=FALSE, times=1)
+# dividing the data 70% training set and 30% test set
+train <- df[idTrain,] # training set with p = 0.7
+sid <- as.numeric(rownames(train))
+test <- df[-sid,] # test set with p = 0.3
+@
+
+\newline 2.2. Test and Evaluate
+
+<<warning=FALSE, message=FALSE>>=
+set.seed(99) #set seed for reproducibility
+library(randomForest) # using randomforest libarary
+prop.table(table(train$Result))
+ctrl = trainControl(method = "cv", number = 5) #using cross validation to go through the dataset which is separated into 5(number = 5);
+train$Result = as.factor(train$Result)# convert the numbers to factors 
+df$Result = ifelse(df$Result == -1,0,1) # make the numbers be only 0 and 1(instead of -1 and 1)
+df$Result = as.factor(df$Result) # convert the numbers to factors in the main dataframe
+fitModel <- train(Result~., #create a model
+                  data=train, # data is set to be equal to train
+                  method="rf", #using randomforest algorithm
+                  trControl=ctrl,
+                  ntree = 5) # number of trees
+
+pred <- predict(fitModel, test[,-ncol(test)]) #predict that dataset
+test <- cbind(test,pred) #bind predictions
+results <- confusionMatrix(table(test$pred, test$Result)) 
+accuracy <- sum(diag(results$table))/nrow(test)
+cat('Accuracy is ', accuracy) # show results
+
+@
+As a class variable we use 'Result' which contains only 1 and -1, where 1 stands for legitimate website and -1 for phishing website.
+\newline
+\newline
+\newline
+\newline
+\newline 2.3. Report and discuss results
+<<warning=FALSE, message=FALSE>>=
+#Illustration and explaination .......
+print(fitModel)
+aLabel <- table(df$Result) # frequency of Result
+barplot(aLabel,col = grey.colors(3),
+        main="Results after modelling and predicting")
+@
+From the barplot above we can observe that the dataset is balanced and we are able to predict whether a website contains malware with approximately ninety percent accuracy.
+
+\section{Improving performance}
+
+\newline 3.1. Tune parameters & change partitioning of the dataset
+
+<<warning=FALSE, message=FALSE>>=
+
+idTrainTwo <- createDataPartition(df$Result, p=0.8,list=FALSE, times=1)
+# this time we are dividing the data into a 80% training set and a 20% test set
+
+trainTwo <- df[idTrainTwo,] # training set with p = 0.8
+sid <- as.numeric(rownames(trainTwo))
+testTwo <- df[-sid,] # test set with p = 0.2
+set.seed(201)
+prop.table(table(trainTwo$Result))
+@
+
+\newline 3.2. Different models
+
+<<warning=FALSE, message=FALSE>>=
+
+ctrlTwo = trainControl(method = "cv", number = 10)
+# increasing the number variable by 5 (the previous model in section two is just 5)
+trainTwo$Result = as.factor(trainTwo$Result)
+fitModelTwo <- train(Result~.,
+                  data=trainTwo,
+                  method="rf", # again with random forest
+                  trControl=ctrlTwo,
+                  ntree=201)
+# increasing the number of trees to be with 196 more than the one in the previous model
+
+predTwo <- predict(fitModelTwo, testTwo[,-ncol(testTwo)]) #predict using the new model
+testTwo <- cbind(testTwo,predTwo)
+resultsTwo <- confusionMatrix(table(testTwo$predTwo, testTwo$Result))
+accuracyTwo <- sum(diag(resultsTwo$table))/nrow(testTwo)
+cat('Accuracy is ', accuracyTwo)
+print(fitModelTwo)
+@
+We can observe that the accuracy has increased slightly by making the changes we made. Increasing the number of decision trees(from 5 to 201) helps to increase the precision of the algorithm.
+\newline
+\newline Conclusion 
+\newline
+\newline The above illustrates that the random forest manages to predict extremely well whether a website contains malware with approximately 90 percent accuracy. Increasing the number of decision trees and cross validation split number increases the accuracy slightly.
+\end{document}
+
